@@ -18,7 +18,7 @@ const DeleteService = (
         try {
             e.preventDefault()
         
-        const toke = await getCookie("accessToken");
+        const token = await getCookie("AccessToken");
         const url = `${process.env.NEXT_PUBLIC_BASE_API_URL}/services/${selectedData.id}`
         
         const response = await fetch(url, {
@@ -26,7 +26,7 @@ const DeleteService = (
             headers: {
                 "Content-Type": "application/json",
                 "APP-KEY": process.env.NEXT_PUBLIC_APP_KEY || "",
-                "Authorization": `Bearer ${toke}`,
+                "Authorization": `Bearer ${token}`,
             },
         })
 

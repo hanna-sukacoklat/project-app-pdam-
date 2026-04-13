@@ -7,14 +7,14 @@ export const items = [
         icon: Home,
     },
     {
-        title: 'my profile',
-        url: '/admin/profile',
-        icon: UserPen,
+        title: 'atmin data',
+        url: '/admin/atmindata',
+        icon: User,
     },
     {
-        title: 'Admin Data',
-        url: '/admin/data',
-        icon: User,
+        title: 'profile atmin',
+        url: '/admin/profileatmin',
+        icon: UserPen,
     },
     {
         title: 'Customers Data',
@@ -28,7 +28,7 @@ export const items = [
     },
     { 
         title: 'Bill',
-        url: '#',
+        url: '/admin/bills',
         icon: Receipt,
     },
     {

@@ -1,71 +1,95 @@
 "use client"
 
-import { setCookie } from "cookies-next"
 import { useState } from "react"
-import {storeCookie} from "@/lib/client-cookies"
+import { useRouter } from "next/navigation";
+import { storeCookie } from '@/lib/client-cookies';
 
-export default function SignUpPage() {
+export default function SignInPage() {
+    const router = useRouter(); 
     const [username, setUsername] = useState<string>("")
     const [password, setPassword] = useState<string>("")
 
-    async function handleSignUp(e: React.FormEvent) {
+    async function handleSignIn(e: React.FormEvent) {
         e.preventDefault()
-        try{
-            const request = JSON.stringify({
+        try {
+            const request = JSON.stringify({ 
                 username,
                 password
             })
             const url = `${process.env.NEXT_PUBLIC_BASE_API_URL}/auth`
-            const response = await fetch( url, {
-                method: 'POST',
+            const response = await fetch(url, { 
+                method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    "app-key": `${process.env.NEXT_PUBLIC_APP_KEY}` 
-                },  
+                    "app-key": `${process.env.NEXT_PUBLIC_APP_KEY}`
+                },
                 body: request
             })
-            if(!response.ok){ //false
-                alert("gagal melakukan sign in")
+            
+            if (!response.ok) {
+                alert("Gagal melakukan login")
                 return;
             }
+            
             const responseData = await response.json()
-            setCookie("AccessToken", responseData.token, { maxAge: 60 * 60 * 24 * 7, path: '/' })
-            if(responseData.role == "ADMIN"){
-                window.location.href = "/admin/dashboard"
-            } else if(responseData.role == "CUSTOMER"){
-                window.location.href = "/customer"
+            
+            // 1. Simpan token ke cookies
+            storeCookie('accessToken', responseData.token, 1);
+            
+            // 2. PERBAIKAN: Ekstrak/Decode ID dari dalam Token JWT
+            try {
+                // Membelah token JWT menjadi 3 bagian dan mengambil bagian tengah (payload)
+                const base64Payload = responseData.token.split('.')[1];
+                // Menerjemahkan base64 ke bentuk teks (JSON)
+                const decodedPayload = JSON.parse(atob(base64Payload));
+                
+                // Simpan ID yang berhasil diekstrak ke localStorage
+                if (decodedPayload.id) {
+                    localStorage.setItem("user_id", decodedPayload.id);
+                    console.log("Berhasil menyimpan user_id:", decodedPayload.id); // Cek di console browser!
+                }
+            } catch (decodeError) {
+                console.error("Gagal mengekstrak token:", decodeError);
             }
-            alert(responseData.message)
+
+            alert("Login berhasil!"); 
+
+            // 3. Arahkan ke halaman yang sesuai
+            if (responseData.role === "ADMIN") {
+                router.push("/admin/dashboard");
+            } else if (responseData.role === "CUSTOMER") {
+                router.push("/customers/dashboard");
+            }
+            
         } catch (error) {
-            alert("error during sign in:");
+            console.error("Error during sign in:", error);
         }
     }
 
     return (
-        <div className="w-full h-dvh bg-blue-50 p-3 flex items-center justify-center">
-            <div className="bg-white p-10 w-full md:w-1/2 lg:w-1/3 rounded-lg">
-                <h1 className="text-center font-bold text-blue-800 text-2xl">
-                    Login Admin
+        <div className="w-full h-dvh bg-blue-100 p-3 flex items-center justify-center">
+            <div className="bg-blue-100 p-10 w-full md:w-1/2 lg:w-1/3 rounded-lg shadow-md">
+                <h1 className="text-center font-bold text-blue-900 text-2xl">
+                    Login Sistem
                 </h1>
 
-                <form className="my-3" onSubmit={handleSignUp}>
-                    <label htmlFor="username" className="text-sm font-semibold text-blue-500">Username</label>
+                <form className="my-3" onSubmit={handleSignIn}>
+                    <label htmlFor="username" className="text-sm font-semibold text-blue-900">Username</label>
                     <input type="text" id="username"
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
-                        className="w-full p-2 border border-blue-500 text-slate-900 mb-2 rounded" />
+                        className="w-full p-2 border border-blue-900 text-slate-900 mb-2 rounded" />
 
-                    <label htmlFor="password" className="text-sm font-semibold text-blue-500">Password</label>
+                    <label htmlFor="password" className="text-sm font-semibold text-blue-900">Password</label>
                     <input type="password" id="password"
                         value={password}
-                        onChange={e => setPassword(e.target.value)}
-                        className="w-full p-2 border border-blue-500 text-slate-900 mb-2 rounded" />
+                        onChange={(e) => setPassword(e.target.value)}
+                        className="w-full p-2 border border-blue-900 text-slate-900 mb-4 rounded" />
 
                     <button type="submit"
-                        className="w-full bg-blue-500 text-white p-2 font-semibold hover:bg-blue-600 rounded">
-                        Sign Up
+                        className="w-full bg-blue-900 text-white p-2 font-semibold hover:bg-blue-700 rounded transition-colors">
+                        Login
                     </button>
-
                 </form>
             </div>
         </div>

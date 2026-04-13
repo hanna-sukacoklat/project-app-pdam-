@@ -35,7 +35,7 @@ const EditService = ({
         try {
             e.preventDefault()
 
-            const token = getCookie("accessToken", "");
+            const token = getCookie("AccessToken", "");
             const url = `${process.env.NEXT_PUBLIC_BASE_API_URL}/services/${selectedData.id}`;
             const payload = JSON.stringify({
                 name, min_usage, max_usage, price

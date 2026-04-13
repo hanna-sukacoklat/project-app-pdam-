@@ -1,12 +1,12 @@
 "use client"
 
 import { useRouter } from "next/router";
-import { Service } from "../types"
+import { Service } from "../../types"
 import { FormEvent, useState } from "react";
 import { Button, Input } from "@base-ui/react";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTrigger, DialogClose, DialogTitle } from "@/components/ui/dialog";
 import { FieldGroup } from "@/components/ui/field";
-import { Label } from "radix-ui";
+import { Label as RadixLabel } from "@radix-ui/react-label";
 
 export const AddCustomer = ({
     serviceData
@@ -45,7 +45,7 @@ return (
             <div>
                 <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
-          <Button onClick={openModal} variant="default">add data customer</Button>
+          <Button onClick={openModal}>add data customer</Button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-sm">
           <form onSubmit={handleSubmit}>
@@ -57,31 +57,31 @@ return (
           </DialogHeader>
           <FieldGroup>
             <div>
-              <Label htmlFor="username">Username</Label>
+              <RadixLabel htmlFor="username">Username</RadixLabel>
               <Input id="username" name="username" type="text" placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} />
             </div>
             <div>
-              <Label htmlFor="password">Password</Label> 
+              <RadixLabel htmlFor="password">Password</RadixLabel> 
               <Input id="password" name="password" type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
             </div>
             <div>
-              <Label htmlFor="name">Name</Label> 
+              <RadixLabel htmlFor="name">Name</RadixLabel> 
               <Input id="name" name="name" type="text" placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} />
             </div>
             <div>
-              <Label htmlFor="customer_number">Customer Number</Label> 
+              <RadixLabel htmlFor="customer_number">Customer Number</RadixLabel> 
               <Input id="customer_number" name="customer_number" type="text" placeholder="Customer Number" value={customer_number} onChange={(e) => setCustomerNumber(e.target.value)} />
             </div>
             <div>
-              <Label htmlFor="phone">Phone</Label> 
+              <RadixLabel htmlFor="phone">Phone</RadixLabel> 
               <Input id="phone" name="phone" type="text" placeholder="Phone" value={phone} onChange={(e) => setPhone(e.target.value)} />
             </div>
             <div>
-              <Label htmlFor="address">Address</Label> 
+              <RadixLabel htmlFor="address">Address</RadixLabel> 
               <textarea id="address" name="address" placeholder="Address" value={alamat} onChange={(e) => setAlamat(e.target.value)} />
             </div>
             <div>
-                <Label htmlFor="service">Service</Label>
+                <RadixLabel htmlFor="service">Service</RadixLabel>
                 <select 
                 className="w-full border p-2"
                 value={service_id}
@@ -98,7 +98,7 @@ return (
           </form>
           <DialogFooter>
             <DialogClose asChild>
-              <Button variant="outline">Cancel</Button>
+              <Button>Cancel</Button>
             </DialogClose>
             <Button type="submit">Save changes</Button>
           </DialogFooter>

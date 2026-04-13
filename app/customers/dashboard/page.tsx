@@ -1,16 +1,16 @@
-import { Admin } from "@/app/types";
+import { Customer } from "@/app/types";
 import { getCookies } from "@/lib/server-cookie";
 
 type ResultData = {
     success: boolean
     message: string
-    data: Admin,
+    data: Customer,
 }
  
-async function getAdminProfile(): Promise<Admin | null> {
+async function getCustomerProfile(): Promise<Customer | null> {
     try {
         const token = await getCookies(`AccessToken`);
-        const url = `${process.env.NEXT_PUBLIC_BASE_API_URL}/admins/me`;
+        const url = `${process.env.NEXT_PUBLIC_BASE_API_URL}/customers/me`;
         const response = await fetch(url, {
             method: "GET",
             headers: {
@@ -33,15 +33,15 @@ async function getAdminProfile(): Promise<Admin | null> {
     }
 }
 
-export default async function AdminDashboardPage() {
-    const adminData = await getAdminProfile();
+export default async function CustomerDashboardPage() {
+    const customerData = await getCustomerProfile();
 
     // Tampilan jika data tidak ditemukan (Error State)
-    if (!adminData) {
+    if (!customerData) {
         return (
             <div className="flex items-center justify-center min-h-screen bg-sky-50 p-5">
                 <div className="bg-white p-8 rounded-xl shadow-sm border border-sky-100 text-center">
-                    <p className="text-sky-600 font-medium">Maaf, data Admin tidak ditemukan.</p>
+                    <p className="text-sky-600 font-medium">Maaf, data Customer tidak ditemukan.</p>
                 </div>
             </div>
         );
@@ -69,17 +69,17 @@ export default async function AdminDashboardPage() {
                             <tbody>
                                 <tr className="bg-white rounded-lg shadow-sm">
                                     <td className="p-4 rounded-l-lg font-medium text-sky-600 w-1/3">Nama</td>
-                                    <td className="p-4 rounded-r-lg text-gray-700">{adminData.name}</td>
+                                    <td className="p-4 rounded-r-lg text-gray-700">{customerData.name}</td>
                                 </tr>
                                 <tr className="bg-white rounded-lg shadow-sm">
                                     <td className="p-4 rounded-l-lg font-medium text-sky-600">Username</td>
                                     <td className="p-4 rounded-r-lg text-gray-700 font-mono text-sm">
-                                        @{adminData.user.username}
+                                        @{customerData.user.username}
                                     </td>
                                 </tr>
                                 <tr className="bg-white rounded-lg shadow-sm">
                                     <td className="p-4 rounded-l-lg font-medium text-sky-600">No. Telepon</td>
-                                    <td className="p-4 rounded-r-lg text-gray-700">{adminData.phone}</td>
+                                    <td className="p-4 rounded-r-lg text-gray-700">{customerData.phone}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -94,3 +94,5 @@ export default async function AdminDashboardPage() {
         </div>
     );
 }
+
+
